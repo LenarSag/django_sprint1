@@ -46,6 +46,11 @@ posts = [
 ]
 
 
+posts_id = dict()
+for position, post in enumerate(posts):
+    posts_id[post["id"]] = position
+
+
 def index(request):
     template = "blog/index.html"
     context = {"posts": reversed(posts)}
@@ -54,13 +59,11 @@ def index(request):
 
 def post_detail(request, id):
     template = "blog/detail.html"
-    context = None
-    for post in posts:
-        if post["id"] == id:
-            context = {"post": post}
-            break
-    if context is None:
+    post_index = posts_id.get(id, None)
+    if post_index is None:
         raise Http404
+    else:
+        context = {"post": posts[post_index]}
     return render(request, template, context)
 
 
